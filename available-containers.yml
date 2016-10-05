@@ -9,9 +9,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - .:/src
-    depends_on:
-      - php-fpm
+      - .:/var/www/my_app
 
   mysql:
     image: mysql:5.7
@@ -24,16 +22,16 @@ services:
       - MYSQL_PASSWORD=password
       - MYSQL_ROOT_PASSWORD=root
 
-  php-fpm:
+  php:
     build:
       dockerfile: Dockerfile
       context: ./Docker/php7-fpm
       args:
         UID: 1000
     volumes:
-      - .:/src
+      - .:/var/www/my_app
 
-  redis-server:
+  redis:
     build:
       dockerfile: Dockerfile
       context: ./Docker/redis
@@ -42,8 +40,24 @@ services:
     expose:
       - 6379
 
-  rabbitmq:
-    image: rabbitmq:3.5.7-management
+  eventstore:
+    image: adbrowne/eventstore
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 2113:2113
+    expose:
+      - 2113
+    volumes:
+      - ./data/db:/data/db
+      - ./data/logs:/data/logs
+
+  memcached:
+    image: memcached:1.4
+    ports:
+      - 11211:11211
+    expose:
+      - 11211
+
+  beanstalked:
+    image: schickling/beanstalkd
+    ports:
+      - 11300:11300

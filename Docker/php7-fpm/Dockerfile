@@ -6,6 +6,7 @@ RUN apt-get update \
     && wget https://www.dotdeb.org/dotdeb.gpg \
     && apt-key add dotdeb.gpg \
     && apt-get update && apt-get install -y \
+        php7.0-bz2 \
         php7.0-common \
         php7.0-cli \
         php7.0-curl \
@@ -14,8 +15,11 @@ RUN apt-get update \
         php7.0-intl \
         php7.0-json \
         php7.0-mcrypt \
+        php7.0-mbstring \
         php7.0-mysql \
         php7.0-opcache \
+        php7.0-bcmath \
+        php7.0-xdebug \
     && docker-php-ext-install mysqli pdo_mysql \
     && rm -rf /var/lib/apt
 
